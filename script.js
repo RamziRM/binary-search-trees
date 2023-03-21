@@ -32,6 +32,7 @@ function constructBST(arr, start, end) {
     return node;
 }
 
+// prettyPrint function to print the tree in a pretty format to the console
 const prettyPrint = (node, prefix = '', isLeft = true) => {
     if (node === null) {
        return;
@@ -45,6 +46,10 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
     }
 }
 
+// insert function to insert a new node into the tree
+// 1. Creates new node with value - if the tree is empty, set the root to the new node
+// 2. Otherwise - Traverse the tree to find the correct position for the new node -- if the value is less than the current node, go left, otherwise go right
+// 3. If the value already exists in the tree, do nothing
 Tree.prototype.insert = function(value) {
     const node = new Node(value);
   
@@ -74,8 +79,14 @@ Tree.prototype.insert = function(value) {
         return;
       }
     }
-  }
-  
+}
+
+// delete function to delete a node from the tree
+// 1. Traverse the tree to find the node to delete
+// --- 3 cases:
+// 2. If the node has no children, delete it
+// 3. If the node has one child, replace it with the child
+// 4. If the node has two children, find the successor (the smallest value in the right subtree) and replace the node with the successor
 Tree.prototype.delete = function(value) {
 this.root = deleteNode(this.root, value);
 }
@@ -111,3 +122,55 @@ if (value < root.data) {
 return root;
 }
 
+// find function to find a node in the tree
+// 1. Traverse the tree to find the node -- if the value is less than the current node, go left, otherwise go right
+// 2. If the node is found, return it
+// 3. If the node is not found, return null
+Tree.prototype.find = function(value) {
+    let current = this.root;
+  
+    while (current !== null) {
+      if (value === current.data) {
+        return current;
+      } else if (value < current.data) {
+        current = current.left;
+      } else {
+        current = current.right;
+      }
+    }
+  
+    return null;
+}
+
+
+Tree.prototype.levelOrder = function(fn) {
+    const result = [];
+    const queue = [];
+  
+    if (!this.root) {
+      return result;
+    }
+  
+    queue.push(this.root);
+  
+    while (queue.length > 0) {
+      const node = queue.shift();
+  
+      if (fn) {
+        fn(node);
+      } else {
+        result.push(node.data);
+      }
+  
+      if (node.left) {
+        queue.push(node.left);
+      }
+  
+      if (node.right) {
+        queue.push(node.right);
+      }
+    }
+  
+    return result;
+};
+  
